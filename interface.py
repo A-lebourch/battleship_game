@@ -1,7 +1,3 @@
-#mes bateaux en bleu
-#mes bateaux touchÃ©s en rouge 
-#mes mines non touchÃ©s en vert
-#mes mines touchÃ©s en orange 
 
 from tkinter import *
 import tkinter as tk 
