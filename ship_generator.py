@@ -73,10 +73,12 @@ class boat :
                         #print('-----already used-----')
                         #print(" ")
                         error = True
+                        boat = []
                         directions.pop(directions.index(where))
                         break
-                
-                boats.append(boat)
+                    
+                if boat != []:
+                    boats.append(boat)
             #print("bateau = ")
             #print (boat)
             #print(" ")
