@@ -1,4 +1,3 @@
-
 from tkinter import *
 import tkinter as tk 
 from tkinter import ttk
@@ -26,6 +25,7 @@ def scores ():
     button3.pack()
 
 def play ():
+    data=[]
     game_window = tk.Tk()
     game_window.title("game")
     #game_window.attributes("-fullscreen", True)
@@ -61,23 +61,41 @@ def play ():
         for c in range(-maxx+1, maxx):
             feuille.create_line(coo(c,-maxy),coo(c,maxy), width=1, fill='black', dash=(5,3))
             feuille.create_line(coo(0,-maxy),coo(0,maxy), width=2, fill='black')
+        
+        val = '0'
+        X = 100
+        Y = 50
+        for t in range (10):
+            val = int(val)
+            val += 1
+            val = str(val)
+            Y = Y + 80
+            tk.Label(game_window, text=val, bg = '#7dbbf5').place(x = X, y = Y)
+            tk.Label(game_window, text=val, bg = '#7dbbf5').place(x = Y + 50, y = X - 50)
+            
     def add():
         abscisse = int(input_X.get(1.0, "end-1c"))
         ordonnee = int(input_Y.get(1.0, "end-1c"))
         coo = [abscisse, ordonnee]
         input_Y.delete("1.0","end")
         input_X.delete("1.0","end") 
-        test = 0
+        col = 0
         for n in range(len(boats)):
             for m in range(len(boats[n])):
-                
                 if boats[n][m] == coo :
                     print("touché")
-                    test = 1
-                    
-                if test == 1:
+                    col = 1
+                    data.append(coo)
+                    if len(data)== 3:
+                      victory_window = tk.Tk()
+                      victory_window.title("winner")  
+                      victory_window.geometry("500x500")
+                      tk.Label(victory_window, text = 'bien joué vous avez gagné', height = 10).pack()
+                 
+                if col == 1:
                     color = 'red'
-                if test == 0:
+                    
+                elif col != 1 :
                     color = 'green'
                     
                 create_circle(abscisse * tailleUnite, ordonnee * tailleUnite, 40, color)
@@ -88,22 +106,24 @@ def play ():
     availablePos = available(row, collums)
     boat_parameters_1 = {
         "lenght" : 3,
-        "quantity" :  4}
+        "quantity" :  1}
     boats = boat.generate(boat_parameters_1, availablePos, row, collums)
     print(boats)
      
     maxx, maxy = calculeMax()
     feuille = Canvas(game_window, width=largeurCanvas, height=hauteurCanvas, bg='grey')
-    feuille.place(x=150, y= 25)
+    feuille.place(x=150, y= 100)
     initGraphique()
     boutonAdd = Button(game_window, text="ajouter", command=lambda: add())
-    boutonAdd.place(x = 300, y = 900)
+    boutonAdd.place(x = 650, y = 920)
     
+    tk.Label(game_window, text='X -> ', bg = '#7dbbf5').place(x = 350, y = 920)
     input_X = Text(game_window,height = 1,width = 5)
-    input_X.place(x = 100, y = 900)
+    input_X.place(x = 400, y = 920)
     
+    tk.Label(game_window, text='Y -> ', bg = '#7dbbf5').place(x = 500, y = 920)
     input_Y = Text(game_window,height = 1,width = 5)
-    input_Y.place(x = 200, y = 900)
+    input_Y.place(x = 550, y = 920)
     
     #label = tk.Label(game_window, text = 'pseudo', height = 1, bg = '#7dbbf5')
     #label.place(x=500, y=900)    
