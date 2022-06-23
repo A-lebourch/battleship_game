@@ -34,13 +34,13 @@ def play ():
     nbUnite = 10
     tailleUnite = largeurCanvas / nbUnite
     
-    def circle(x, y, rayon, color, offset): 
+    def cercle(x, y, rayon, color, offset): 
         offset = offset / 2
         x0 = x - rayon - offset
         y0 = y - rayon - offset
         x1 = x + rayon - offset
         y1 = y + rayon - offset
-        return feuille.create_oval(x0, y0, x1, y1, fill = color)
+        return canvas.create_oval(x0, y0, x1, y1, fill = color)
     
     def calculeMax():
         return int(largeurCanvas/(tailleUnite * 2)), int(hauteurCanvas/(tailleUnite *
@@ -50,11 +50,11 @@ def play ():
     
     def initGraphique():
         for l in range(-maxy+1, maxy):
-            feuille.create_line(coo(-maxx,l),coo(maxx,l), width=1, fill='black', dash=(5,3))
-            feuille.create_line(coo(-maxx,0),coo(maxx,0), width=2, fill='black')
+            canvas.create_line(coo(-maxx,l),coo(maxx,l), width=1, fill='black', dash=(5,3))
+            canvas.create_line(coo(-maxx,0),coo(maxx,0), width=2, fill='black')
         for c in range(-maxx+1, maxx):
-            feuille.create_line(coo(c,-maxy),coo(c,maxy), width=1, fill='black', dash=(5,3))
-            feuille.create_line(coo(0,-maxy),coo(0,maxy), width=2, fill='black')
+            canvas.create_line(coo(c,-maxy),coo(c,maxy), width=1, fill='black', dash=(5,3))
+            canvas.create_line(coo(0,-maxy),coo(0,maxy), width=2, fill='black')
         val = '0'
         X = 100
         Y = 50
@@ -66,7 +66,7 @@ def play ():
             tk.Label(game_window, text=val, bg = '#7dbbf5').place(x = X, y = Y)
             tk.Label(game_window, text=val, bg = '#7dbbf5').place(x = Y + 50, y = X - 50)
             
-    def add():
+    def add(nb):
         abscisse = int(input_X.get(1.0, "end-1c"))
         ordonnee = int(input_Y.get(1.0, "end-1c"))
         coo = [abscisse, ordonnee]
@@ -79,16 +79,17 @@ def play ():
                     print("touché")
                     col = 1
                     data.append(coo)
-                    if len(data)== 10:
+                    if len(data)== nb:
                       victory_window = tk.Tk()
                       victory_window.title("winner")  
                       victory_window.geometry("500x500")
                       tk.Label(victory_window, text = 'bien joué vous avez gagné', height = 10).pack()
-                if col == 1:
+                      tk.Button(victory_window, text = 'main menu',  command=lambda:[victory_window.destroy(), game_window.destroy(),main()]).pack()
+                if col == 1:    
                     color = 'red'
                 elif col != 1 :
                     color = 'green'
-                circle(abscisse * tailleUnite, ordonnee * tailleUnite, 40, color, tailleUnite)
+                cercle(abscisse * tailleUnite, ordonnee * tailleUnite, 40, color, tailleUnite)
         
     def parameters(boat_parameters, x, y):
         boat_param = str(boat_parameters['quantity']) + " boats of lenght " + str(boat_parameters['lenght']) + " squares"
@@ -98,25 +99,25 @@ def play ():
     collums = 10
     availablePos = available(row, collums)
     boat_parameters_1 = {
-        "lenght" : 3,
-        "quantity" :  2}
+        "lenght" : 2,
+        "quantity" :  1}
     boats, availablePos= boat.generate(boat_parameters_1, availablePos, row, collums)
-    print(boats)
     boat_parameters_2 = {
         "lenght" : 2,
-        "quantity" :  2}
+        "quantity" :  1}
     newGen, availablePos = boat.generate(boat_parameters_2, availablePos, row, collums)
+    nb_squares = (boat_parameters_1['quantity']*boat_parameters_1['lenght'] )+ (boat_parameters_2['quantity']*boat_parameters_1['lenght'])
     for t in range (boat_parameters_2['quantity']):
-        boats.append(newGen[t-1])
+        boats.append(newGen[t-1]) 
     print(boats)
     parameters(boat_parameters_1, 1000, 150)
     parameters(boat_parameters_2, 1000, 200)
     tk.Label(game_window, text='the red points show the hit ships', bg = '#7dbbf5').place(x=1000, y=100)
     maxx, maxy = calculeMax()
-    feuille = Canvas(game_window, width=largeurCanvas, height=hauteurCanvas, bg='grey')
-    feuille.place(x=150, y= 100)
+    canvas = Canvas(game_window, width=largeurCanvas, height=hauteurCanvas, bg='grey')
+    canvas.place(x=150, y= 100)
     initGraphique()
-    boutonAdd = Button(game_window, text="placer bombe", command=lambda: add())
+    boutonAdd = Button(game_window, text="placer bombe", command=lambda: add(nb_squares))
     boutonAdd.place(x = 650, y = 920)
     tk.Label(game_window, text='X -> ', bg = '#7dbbf5').place(x = 350, y = 920)
     input_X = Text(game_window,height = 1,width = 5)
